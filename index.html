@@ -668,7 +668,7 @@
           <button class="pill-btn" id="btnOpenHelp" type="button">🛡️ 求助话术</button>
         </div>
         <div class="topbar-right">
-          <button class="pill-btn" id="btnOpenVoice" type="button">🎵 音色与语音API</button>
+          <button class="pill-btn" id="btnOpenVoice" type="button">⚙️ 设置</button>
           <button class="pill-btn" id="btnTheme" type="button" aria-pressed="false">🌙 夜间</button>
           <button class="pill-btn" id="btnFont" type="button" aria-pressed="false">Aa 大字</button>
         </div>
@@ -856,28 +856,6 @@
             </ul>
           </div>
 
-          <!-- Collapsible Settings -->
-          <details class="card settings-card mob-sec-guard">
-            <summary>
-              <span style="display:flex;align-items:center;gap:8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--sky-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4.5"/><path d="M11.2 11.8L20 3m-3.5 1.5L19 7m-5.8-.3l2.3 2.3"/></svg>
-                连接设置（家长/管理员）
-              </span>
-              <span style="font-size:12.5px;color:var(--ink-faint);font-weight:500;">展开</span>
-            </summary>
-            <div class="settings-body">
-              <label for="apiBase">Dify API 地址</label>
-              <input id="apiBase" type="url" value="https://muddy-recipe-c911.j7wdgsv2g8.workers.dev" autocomplete="off" spellcheck="false" />
-              <label for="apiKey">应用 API 密钥</label>
-              <input id="apiKey" type="password" placeholder="app-…" autocomplete="off" spellcheck="false" />
-              <div class="settings-actions">
-                <button class="btn-connect" id="btnConnect" type="button">连接小星球</button>
-                <button class="btn-small" id="btnDisconnect" type="button">切换本地陪伴</button>
-              </div>
-              <p class="conn-status"><span class="conn-dot on" id="connDot2"></span><span id="connStatus">已连接，可以开始聊天了。</span></p>
-              <p class="hint">页面已内置默认密钥，打开就能直接聊天。若处于离线环境或密钥暂不可用，会自动切换到「本地温柔陪伴模式」，保证孩子随时都能得到安抚。</p>
-            </div>
-          </details>
 
           <div class="card note-card mob-sec-guard">
             <h2>
@@ -900,14 +878,31 @@
     <div class="modal-backdrop" id="modalVoice" hidden role="dialog" aria-modal="true" aria-labelledby="voiceTitle">
       <div class="modal">
         <div class="modal-head">
-          <h3 id="voiceTitle">🎵 小星球音色与语音 API 设置</h3>
+          <h3 id="voiceTitle">⚙️ 设置</h3>
           <button class="modal-close" type="button" data-close="modalVoice" aria-label="关闭">×</button>
         </div>
 
+        <!-- Connection: built in via Worker; advanced, hidden by default -->
+        <details class="card settings-card" style="margin-bottom:12px;">
+          <summary style="cursor:pointer;font-weight:600;">高级连接设置（已内置，一般不用改）</summary>
+          <div class="settings-body">
+            <label for="apiBase">Dify API 地址</label>
+            <input id="apiBase" type="url" value="https://muddy-recipe-c911.j7wdgsv2g8.workers.dev" autocomplete="off" spellcheck="false" />
+            <label for="apiKey">应用 API 密钥</label>
+            <input id="apiKey" type="password" placeholder="app-…" autocomplete="off" spellcheck="false" />
+            <div class="settings-actions">
+              <button class="btn-connect" id="btnConnect" type="button">连接小星球</button>
+              <button class="btn-small" id="btnDisconnect" type="button">切换本地陪伴</button>
+            </div>
+            <p class="conn-status"><span class="conn-dot on" id="connDot2"></span><span id="connStatus">已连接，可以开始聊天了。</span></p>
+            <p class="hint">连接已内置在服务器端，打开就能直接聊天，不用填密钥。若在线服务不可用，会自动切换到「本地温柔陪伴模式」。</p>
+          </div>
+        </details>
+
         <!-- External TTS API Integration -->
         <div class="api-voice-box">
-          <h4>☁️ 接入真人感 AI 语音 API（OpenAI / 硅基流动 CosyVoice / 兼容接口）</h4>
-          <div class="voice-field">
+          <h4>🎵 小星球的声音（已内置，固定用这一个声音）</h4>
+          <div class="voice-field" style="display:none;">
             <label for="ttsMode"><span>语音合成方式</span></label>
             <select id="ttsMode">
               <option value="auto">自动优先（自定义TTS API → Dify内置TTS → 浏览器语音）</option>
@@ -917,7 +912,7 @@
             </select>
           </div>
           <div id="customTtsFields">
-            <div class="voice-field">
+            <div class="voice-field" style="display:none;">
               <label for="ttsUrl"><span>TTS 接口地址（POST /audio/speech）</span></label>
               <input id="ttsUrl" type="url" placeholder="https://api.openai.com/v1/audio/speech" autocomplete="off" spellcheck="false" />
               <div class="quick-chips">
@@ -926,7 +921,7 @@
                 <button class="q-chip" type="button" data-fill-tts="siliconflow">填入硅基流动 (CosyVoice2)</button>
               </div>
             </div>
-            <div class="voice-field">
+            <div class="voice-field" style="display:none;">
               <label for="ttsKey"><span>TTS API 密钥</span></label>
               <input id="ttsKey" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false" />
             </div>
@@ -936,18 +931,13 @@
                 <input id="ttsModel" type="text" placeholder="tts-1" />
               </div>
               <div class="voice-field" style="margin-bottom:0;">
-                <label for="ttsVoice"><span>音色 ID (Fish 可留空用默认)</span></label>
+                <label for="ttsVoice"><span>音色 ID（Fish Audio 声音库的模型 ID，留空用默认音色）</span></label>
                 <input id="ttsVoice" type="text" placeholder="留空或填音色ID" />
               </div>
             </div>
-            <div class="quick-chips" style="margin-top:8px;">
-              <button class="q-chip" type="button" data-voice-pick="nova">nova (温柔女声)</button>
-              <button class="q-chip" type="button" data-voice-pick="shimmer">shimmer (甜美轻柔)</button>
-              <button class="q-chip" type="button" data-voice-pick="alloy">alloy (清亮自然)</button>
-              <button class="q-chip" type="button" data-voice-pick="FunAudioLLM/CosyVoice2-0.5B:anna">CosyVoice: anna</button>
-            </div>
+            <p class="hint">音色 ID 是 Fish Audio 声音库里的模型 ID。留空就用默认温柔音色；想换音色，去 Fish Audio 声音库挑一个，把它的模型 ID 粘贴到上面。</p>
           </div>
-          <div class="voice-status" id="ttsApiStatus">未填写自定义语音密钥时，将自动尝试 Dify 语音或浏览器自然语音。</div>
+          <div class="voice-status" id="ttsApiStatus">声音已内置，固定用 Fish Audio 温柔音色，不会再变。</div>
         </div>
 
         <!-- Browser Voice Presets (Fallback / Local) -->
@@ -970,7 +960,7 @@
           </button>
         </div>
 
-        <div class="voice-field">
+        <div class="voice-field" style="display:none;">
           <label for="voiceSelect"><span>本地备选发音人</span><span id="voiceCountBadge" style="font-weight:500;color:var(--ink-faint);"></span></label>
           <select id="voiceSelect"></select>
         </div>
@@ -1141,6 +1131,14 @@
             if (typeof saved.ttsKey === "string") state.ttsKey = saved.ttsKey;
             if (saved.ttsModel) state.ttsModel = saved.ttsModel;
             if (saved.ttsVoice) state.ttsVoice = saved.ttsVoice;
+            // 上线版已锁定：声音只走 Worker 代理的 Fish Audio。清掉旧的
+            // 本地保存里可能残留的别的语音地址、"nova" 之类无效音色 ID。
+            state.ttsUrl = "https://muddy-recipe-c911.j7wdgsv2g8.workers.dev/audio/speech";
+            state.ttsMode = "custom";
+            var badVoices = ["nova", "shimmer", "alloy", "echo", "fable", "onyx", "ash", "ballad", "coral", "sage", "verse"];
+            if (state.ttsVoice && (badVoices.indexOf(state.ttsVoice.toLowerCase()) !== -1 || state.ttsVoice.indexOf("CosyVoice") !== -1)) {
+              state.ttsVoice = "";
+            }
           } catch (e) {}
         }
         function saveStore() {
@@ -1448,23 +1446,21 @@
           };
           var payload;
           var ttsText = cleaned.length > 260 ? cleaned.slice(0, 260) : cleaned;
-          if (isFish) {
-            headers["model"] = state.ttsModel || "s2.1-pro-free";
-            payload = {
-              text: ttsText,
-              format: "mp3",
-              temperature: 0.3,
-              top_p: 0.6,
-              prosody: { speed: state.voiceRate || 0.94, volume: 0 }
-            };
-            if (state.ttsVoice) payload.reference_id = state.ttsVoice;
-          } else {
-            payload = {
-              model: state.ttsModel || "tts-1",
-              input: stripEmotionTags(cleaned, false),
-              voice: state.ttsVoice || "nova",
-              speed: state.voiceRate || 0.95
-            };
+          // 全站只发 Fish Audio 格式，不再有 OpenAI 格式分支。
+          headers["model"] = state.ttsModel || "s2.1-pro-free";
+          payload = {
+            text: ttsText,
+            format: "mp3",
+            temperature: 0.3,
+            top_p: 0.6,
+            prosody: { speed: state.voiceRate || 0.94, volume: 0 }
+          };
+          // 只接受真正的 Fish Audio 声音模型 ID；OpenAI 的名字（nova 等）
+          // 不是 Fish 的音色，传过去会被 Fish 拒绝（400），声音就没了。
+          var fishVoice = (state.ttsVoice || "").trim();
+          var nonFishVoices = ["nova", "shimmer", "alloy", "echo", "fable", "onyx", "ash", "ballad", "coral", "sage", "verse"];
+          if (fishVoice && nonFishVoices.indexOf(fishVoice.toLowerCase()) === -1 && fishVoice.indexOf("CosyVoice") === -1) {
+            payload.reference_id = fishVoice;
           }
           function doFetch(attempt) {
             currentTtsAbort = typeof AbortController !== "undefined" ? new AbortController() : null;
@@ -1497,15 +1493,15 @@
               currentTtsAbort = null;
               var rawMsg = err && err.message ? err.message : "";
               var reason;
-              if (st === 402) reason = "Fish Audio 免费额度或余额不足（402），已切回本地语音";
-              else if (st === 429) reason = "Fish Audio 请求太频繁触发限流（429），已先用本地语音";
-              else if (st === 401) reason = "API 密钥无效或已过期（401），已切回本地语音";
+              if (st === 402) reason = "Fish Audio 免费额度或余额不足（402），这次先不朗读";
+              else if (st === 429) reason = "Fish Audio 请求太频繁触发限流（429），这次先不朗读";
+              else if (st === 401) reason = "语音服务暂时不可用（401），这次先不朗读";
               else if (/failed to fetch|networkerror|load failed/i.test(rawMsg) || !rawMsg) {
-                reason = "网络或跨域连接中断，已切回本地语音";
+                reason = "网络连接中断，语音这次先不朗读";
               } else {
-                reason = "接口返回错误（" + rawMsg + "），已切回本地语音";
+                reason = "语音接口返回错误（" + rawMsg + "），这次先不朗读";
               }
-              var msgText = onFail ? reason : reason.replace(/，已(自动)?切回本地语音|，已先用本地语音/g, "（已锁定当前音色，未切换本地语音）");
+              var msgText = reason + "（声音已锁定，不会切换成别的声音）";
               if (statusEl) statusEl.textContent = "⚠️ " + msgText + "。";
               showToast("⚠️ " + msgText);
               if (onFail) onFail();
@@ -1514,50 +1510,19 @@
           doFetch(0);
         }
 
+        // 声音已锁定：全站只走 Fish Audio（经 Worker 代理）这一个声音，
+        // 不再回退浏览器语音或 Dify 内置语音，任何对话、任何气泡都一样。
         function speakText(text, opts) {
           opts = opts || {};
           var cleaned = cleanSpeechText(text);
           if (!cleaned) return false;
           stopSpeaking();
-
-          var mode = state.ttsMode || "auto";
-          var hasCustom = !!state.ttsUrl;
-
-          if (mode === "browser") {
-            return speakWithWebSpeech(cleaned, opts);
+          if (!state.ttsUrl) {
+            if (!opts.silent) showToast("语音服务暂时不可用");
+            return false;
           }
-          if (mode === "custom") {
-            if (!hasCustom) {
-              if (!opts.silent) showToast("请先填写 TTS 接口地址");
-              return false;
-            }
-            tryCustomTtsApi(cleaned, opts, null);
-            return true;
-          }
-          if (mode === "dify") {
-            if (state.connected && state.apiKey) {
-              tryDifyTts(cleaned, opts, function () { speakWithWebSpeech(cleaned, opts); });
-              return true;
-            }
-            return speakWithWebSpeech(cleaned, opts);
-          }
-
-          // Auto mode: Custom TTS API -> Dify TTS -> Web Speech
-          if (hasCustom) {
-            tryCustomTtsApi(cleaned, opts, function () {
-              if (state.connected && difyTtsSupported && state.apiKey) {
-                tryDifyTts(cleaned, opts, function () { speakWithWebSpeech(cleaned, opts); });
-              } else {
-                speakWithWebSpeech(cleaned, opts);
-              }
-            });
-            return true;
-          }
-          if (state.connected && difyTtsSupported && state.apiKey) {
-            tryDifyTts(cleaned, opts, function () { speakWithWebSpeech(cleaned, opts); });
-            return true;
-          }
-          return speakWithWebSpeech(cleaned, opts);
+          tryCustomTtsApi(cleaned, opts, null);
+          return true;
         }
 
         /* ---------- Voice Settings & API UI ---------- */
@@ -1566,7 +1531,7 @@
           document.getElementById("ttsUrl").value = state.ttsUrl || "";
           document.getElementById("ttsKey").value = state.ttsKey || "";
           document.getElementById("ttsModel").value = state.ttsModel || "tts-1";
-          document.getElementById("ttsVoice").value = state.ttsVoice || "nova";
+          document.getElementById("ttsVoice").value = state.ttsVoice || "";
           document.querySelectorAll("#voicePresets .preset-card").forEach(function (card) {
             card.classList.toggle("selected", card.dataset.preset === state.voicePreset);
           });
@@ -1589,17 +1554,9 @@
         document.querySelectorAll("[data-fill-tts]").forEach(function (btn) {
           btn.addEventListener("click", function () {
             if (btn.dataset.fillTts === "fish") {
-              document.getElementById("ttsUrl").value = "https://muddy-recipe-c911.j7wdgsv2g8.workers.dev/";
+              document.getElementById("ttsUrl").value = "https://muddy-recipe-c911.j7wdgsv2g8.workers.dev/audio/speech";
               document.getElementById("ttsModel").value = "s2.1-pro-free";
               document.getElementById("ttsVoice").value = "";
-            } else if (btn.dataset.fillTts === "openai") {
-              document.getElementById("ttsUrl").value = "https://api.openai.com/v1/audio/speech";
-              document.getElementById("ttsModel").value = "tts-1";
-              document.getElementById("ttsVoice").value = "nova";
-            } else if (btn.dataset.fillTts === "siliconflow") {
-              document.getElementById("ttsUrl").value = "https://api.siliconflow.cn/v1/audio/speech";
-              document.getElementById("ttsModel").value = "FunAudioLLM/CosyVoice2-0.5B";
-              document.getElementById("ttsVoice").value = "FunAudioLLM/CosyVoice2-0.5B:anna";
             }
             saveVoiceInputsFromForm();
           });
@@ -2079,7 +2036,7 @@
           var lines = ["星球儿童心理健康助手 · 对话记录 (" + todayKey(0) + ")", "===================================="];
           state.chatLog.forEach(function (m) {
             var who = m.role === "user" ? "小朋友" : "小星球";
-            lines.push("[" + formatTime(m.ts) + "] " + who + "：\n" + m.text + "\n");
+            lines.push("[" + formatTime(m.ts) + "] " + who + "：\n" + stripEmotionTags(m.text, false) + "\n");
           });
           var blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
           var url = URL.createObjectURL(blob);
