@@ -533,6 +533,7 @@
       .preset-card span { font-size: 12px; opacity: .85; display: block; }
       .voice-field { margin-bottom: 12px; }
       .voice-field label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+      .voice-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
       .voice-field select, .voice-field input[type="text"], .voice-field input[type="url"], .voice-field input[type="password"] {
         width: 100%; border: 1.5px solid var(--card-border); border-radius: var(--radius-sm);
         padding: 8px 11px; font: inherit; font-size: 13.5px; background: var(--card); color: var(--ink);
@@ -612,26 +613,32 @@
       /* ---------- Responsive (Mobile & Tablet First Polish) ---------- */
       @media (max-width: 960px) {
         .wrap { padding: 10px 12px calc(28px + env(safe-area-inset-bottom)); }
-        .topbar { flex-direction: column; align-items: stretch; gap: 8px; }
-        .topbar-left {
-          flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px;
+
+        /* 顶栏改成一行横向滑动：7 个按钮都在一行里，滑一下就能找到，不再占两行 */
+        .topbar {
+          flex-direction: row; align-items: center; gap: 8px;
+          overflow-x: auto; padding-bottom: 2px;
           -webkit-overflow-scrolling: touch; scrollbar-width: none;
         }
+        .topbar::-webkit-scrollbar { display: none; }
+        .topbar-left { flex: none; flex-wrap: nowrap; overflow: visible; padding-bottom: 0; }
         .topbar-left::-webkit-scrollbar { display: none; }
-        .topbar-right { justify-content: flex-end; }
+        .topbar-right { flex: none; justify-content: flex-start; }
+
         .intro-banner { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 12px; }
         .intro-banner-actions { justify-content: flex-end; }
 
-        .hero { margin-bottom: 14px; border-radius: 20px; }
+        /* 主横幅收紧：介绍文字在手机上先藏起来，头像改小，聊天不用再翻一屏才看到 */
+        .hero { margin-bottom: 12px; border-radius: 20px; }
         .hero-inner {
-          grid-template-columns: 1fr; padding: 18px 16px; gap: 10px; text-align: center;
+          grid-template-columns: 1fr; padding: 16px 16px 18px; gap: 8px; text-align: center;
         }
         .hero-art { order: -1; }
-        .hero-art img { max-width: 104px; border-width: 3px; }
-        .hero h1 { font-size: 25px; margin: 8px 0 6px; }
-        .hero p.lede { font-size: 14px; margin: 0 auto 12px; }
-        .hero-actions { justify-content: center; gap: 8px; }
-        .hero-actions .btn { padding: 8px 15px; min-height: 38px; font-size: 13.5px; }
+        .hero-art img { max-width: 76px; border-width: 3px; }
+        .hero h1 { font-size: 22px; margin: 6px 0 0; }
+        .hero p.lede { display: none; }
+        .hero-actions { justify-content: center; gap: 8px; margin-top: 10px; }
+        .hero-actions .btn { padding: 7px 14px; min-height: 38px; font-size: 13.5px; }
 
         .mobile-tabs { display: grid; }
         .layout { grid-template-columns: 1fr; gap: 14px; }
@@ -646,12 +653,35 @@
         .mood-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
         .mood-btn { padding: 8px 4px; font-size: 12.5px; }
         .chat-head { padding: 10px 12px; }
-        .messages { height: 50vh; min-height: 300px; padding: 14px 12px 8px; }
+        /* 聊天区用 dvh：键盘弹起时它会跟着缩，输入框不会被顶出屏幕 */
+        .messages { height: 50vh; height: 52dvh; min-height: 320px; padding: 14px 12px 8px; }
         .msg { max-width: 94%; }
         .chips { padding: 8px 12px 2px; }
+        .chip { min-height: 40px; }
+        .speak-btn { min-height: 32px; }
         .composer { padding: 8px 12px 12px; gap: 6px; }
         .btn-send { padding: 0 14px; font-size: 14px; }
+        /* 输入框 16px：iPhone 点输入时不会自动放大页面；输入框加高，两行提示语不再被截断 */
+        .composer textarea { font-size: 16px; line-height: 1.5; min-height: 70px; }
+        .voice-field select, .voice-field input,
+        .settings-card input, .worry-box textarea { font-size: 16px; }
         .preset-grid { grid-template-columns: 1fr; }
+        .voice-two-col { grid-template-columns: 1fr; }
+
+        /* 弹窗改成底部抽屉：大拇指够得着，底部按安全区留空 */
+        .modal-backdrop { align-items: flex-end; padding: 0; }
+        .modal {
+          width: 100%; max-width: none;
+          max-height: 92vh; max-height: 92dvh;
+          border-radius: 24px 24px 0 0;
+          padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+        }
+        .modal-head h3 { font-size: 17px; }
+
+        .toast {
+          bottom: calc(16px + env(safe-area-inset-bottom));
+          max-width: calc(100vw - 32px); text-align: center;
+        }
       }
     </style>
   </head>
@@ -925,7 +955,7 @@
               <label for="ttsKey"><span>TTS API 密钥</span></label>
               <input id="ttsKey" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false" />
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="voice-two-col">
               <div class="voice-field" style="margin-bottom:0;">
                 <label for="ttsModel"><span>模型 Model</span></label>
                 <input id="ttsModel" type="text" placeholder="tts-1" />
